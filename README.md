@@ -1,9 +1,9 @@
 # Playwright Base Framework
 
-This project is a base automation framework using [Playwright](https://playwright.dev/dotnet/) and [SpecFlow](https://specflow.org/) for end-to-end testing of web applications in C#.
+This project is a base automation framework using [Playwright](https://playwright.dev/dotnet/) and [Reqnroll](https://reqnroll.net/) for end-to-end testing of web applications in C#. Migrated from Specflow to Reqnroll.
 
 ## Features
-- SpecFlow for BDD-style test scenarios
+- Reqnroll for BDD-style test scenarios
 - Playwright for browser automation
 - Page Object Model structure
 - Example feature: SauceDemo
@@ -41,7 +41,7 @@ This project is a base automation framework using [Playwright](https://playwrigh
 
 ## Useful Links
 - [Playwright for .NET Documentation](https://playwright.dev/dotnet/docs/intro)
-- [SpecFlow Documentation](https://docs.specflow.org/projects/specflow/en/latest/)
+- [Reqnroll Documentation](https://docs.reqnroll.net/latest/quickstart/index.html)
 
 ## License
 MIT
