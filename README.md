@@ -31,7 +31,7 @@ This project is a base automation framework using [Playwright](https://playwrigh
    ```
 4. **Run tests**
    ```powershell
-   dotnet test
+    dotnet test --settings Playwright.runsettings
    ```
 
 ## Writing Tests

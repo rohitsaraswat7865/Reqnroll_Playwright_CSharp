@@ -18,4 +18,10 @@
     <Folder Include="Drivers\" />
   </ItemGroup>
 
+  <ItemGroup>
+    <None Update="Playwright.runsettings">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
 </Project>
