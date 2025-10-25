@@ -1,6 +1,7 @@
-# Playwright Base Framework
+# Playwright-C# Base Framework
 
-This project is a base automation framework using [Playwright](https://playwright.dev/dotnet/) and [Reqnroll](https://reqnroll.net/) for end-to-end testing of web applications in C#. Migrated from Specflow to Reqnroll.
+This project is a base automation framework using [Playwright](https://playwright.dev/dotnet/) and [Reqnroll](https://reqnroll.net/) for end-to-end testing of web applications in C#. 
+[25102025] Migrated framework from Specflow to Reqnroll.
 
 ## Features
 - Reqnroll for BDD-style test scenarios
@@ -10,7 +11,7 @@ This project is a base automation framework using [Playwright](https://playwrigh
 
 ## Project Structure
 - `Features/` - Contains feature files and generated code
-- `StepDefinitions/` - Step definition classes for SpecFlow
+- `StepDefinitions/` - Step definition classes for SpecFlow aka Reqnroll
 - `Support/` - Page objects and support files
 - `bin/`, `obj/` - Build output directories
 - `Playwright_BaseFramework.csproj` - Project file
@@ -19,8 +20,7 @@ This project is a base automation framework using [Playwright](https://playwrigh
 1. **Install dependencies**
    - .NET 6 SDK or later
    - Playwright: `dotnet add package Microsoft.Playwright`
-   - SpecFlow: `dotnet add package SpecFlow`
-   - SpecFlow+Runner: `dotnet add package SpecFlow.Plus.Runner`
+  
 2. **Restore NuGet packages**
    ```powershell
    dotnet restore
