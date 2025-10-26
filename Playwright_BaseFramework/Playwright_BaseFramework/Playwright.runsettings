@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RunSettings>
+ <RunConfiguration>
+ <!-- EnvironmentVariables are injected into the test process and can be read with Environment.GetEnvironmentVariable(...) -->
+ <EnvironmentVariables>
+ <!-- Browser launch -->
+ <PLAYWRIGHT_Headless>true</PLAYWRIGHT_Headless>
+ <PLAYWRIGHT_SlowMo>1000</PLAYWRIGHT_SlowMo>
+
+ <!-- Tracing options -->
+ <PLAYWRIGHT_Tracing_Screenshots>true</PLAYWRIGHT_Tracing_Screenshots>
+ <PLAYWRIGHT_Tracing_Snapshots>true</PLAYWRIGHT_Tracing_Snapshots>
+ </EnvironmentVariables>
+ </RunConfiguration>
+</RunSettings>
