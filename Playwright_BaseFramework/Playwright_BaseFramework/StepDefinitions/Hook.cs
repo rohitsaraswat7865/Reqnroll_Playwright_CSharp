@@ -31,8 +31,8 @@ namespace Playwright_BaseFramework.StepDefinitions
             this.playwright = await Playwright.CreateAsync();
             var browserLaunchOptions = new BrowserTypeLaunchOptions()
             {
-                Headless = false,
-                SlowMo = 10
+                Headless = headless,
+                SlowMo = slowMo
             };
             var browser = await playwright.Chromium.LaunchAsync(browserLaunchOptions);
             this.browserContext = await browser.NewContextAsync();

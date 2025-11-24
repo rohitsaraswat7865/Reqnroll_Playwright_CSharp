@@ -4,8 +4,8 @@
  <!-- EnvironmentVariables are injected into the test process and can be read with Environment.GetEnvironmentVariable(...) -->
  <EnvironmentVariables>
  <!-- Browser launch -->
- <PLAYWRIGHT_Headless>true</PLAYWRIGHT_Headless>
- <PLAYWRIGHT_SlowMo>1000</PLAYWRIGHT_SlowMo>
+ <PLAYWRIGHT_Headless>false</PLAYWRIGHT_Headless>
+ <PLAYWRIGHT_SlowMo>2000</PLAYWRIGHT_SlowMo>
 
  <!-- Tracing options -->
  <PLAYWRIGHT_Tracing_Screenshots>true</PLAYWRIGHT_Tracing_Screenshots>
