@@ -10,7 +10,7 @@ This project is a base automation framework using [Playwright](https://playwrigh
 - Example feature: SauceDemo
 
 ## Project Structure
-- `Features/` - Contains feature files and generated code
+- `Features/` - Contains feature files, test data in excel and generated nunit code
 - `StepDefinitions/` - Step definition classes for SpecFlow aka Reqnroll
 - `Support/` - Page objects and support files
 - `bin/`, `obj/` - Build output directories
