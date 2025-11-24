@@ -1,4 +1,4 @@
-# ReqNRoll-BDD-Playwright-C# (Base Framework|Template)
+# ReqNRoll-BDD-Playwright-C# (Base Framework | Template)
 
 This project is a base automation framework using [Playwright](https://playwright.dev/dotnet/) and [Reqnroll](https://reqnroll.net/) for end-to-end testing of web applications in C#. 
 [25102025] Migrated framework from Specflow to Reqnroll.
