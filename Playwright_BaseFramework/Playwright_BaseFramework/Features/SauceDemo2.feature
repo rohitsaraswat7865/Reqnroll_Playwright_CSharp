@@ -5,6 +5,8 @@ Background:
     Given Login page is loaded
 
 @regression
+@DataSource:Test.xlsx
+@DataSet:Sheet1
 Scenario Outline:  Test_2-Add 3 items to basket and buy 2 items
     When Enter username as <USER_NAME> in login page
 	And Enter password in login page

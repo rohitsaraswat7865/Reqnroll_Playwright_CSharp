@@ -1,0 +1,10 @@
+﻿{
+  "plugins": [
+    {
+      "name": "Reqnroll.ExternalData",
+      "settings": {
+        "dataDirectory": "Features"
+      }
+    }
+  ]
+}

@@ -7,11 +7,12 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="18.0.0" />
-    <PackageReference Include="Microsoft.Playwright.NUnit" Version="1.55.0" />
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="18.0.1" />
+    <PackageReference Include="Microsoft.Playwright.NUnit" Version="1.56.0" />
     <PackageReference Include="nunit" Version="4.4.0" />
     <PackageReference Include="NUnit3TestAdapter" Version="5.2.0" />
-    <PackageReference Include="Reqnroll.NUnit" Version="3.2.0" />
+    <PackageReference Include="Reqnroll.ExternalData" Version="3.2.1" />
+    <PackageReference Include="Reqnroll.NUnit" Version="3.2.1" />
   </ItemGroup>
 
   <ItemGroup>
@@ -19,6 +20,9 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Update="Features\Test.xlsx">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Update="Playwright.runsettings">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
