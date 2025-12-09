@@ -6,6 +6,7 @@
  <!-- Browser launch -->
  <PLAYWRIGHT_Headless>false</PLAYWRIGHT_Headless>
  <PLAYWRIGHT_SlowMo>2000</PLAYWRIGHT_SlowMo>
+ <PLAYWRIGHT_BrowserType>Chrome</PLAYWRIGHT_BrowserType>	 
 
  <!-- Tracing options -->
  <PLAYWRIGHT_Tracing_Screenshots>true</PLAYWRIGHT_Tracing_Screenshots>
