@@ -82,6 +82,8 @@ Playwright_BaseFramework/
    # Open the generated HTML report
    & "bin\Debug\net10.0\PlaywrightReport.html"
    ```
+   <img width="854" height="418" alt="image" src="https://github.com/user-attachments/assets/8f0f8874-3343-4f1e-8942-ba4b7a1cd011" />
+
 
 ## Test Artifacts
 
