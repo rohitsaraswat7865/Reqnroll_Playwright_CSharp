@@ -110,7 +110,7 @@ namespace Playwright_BaseFramework.Features
 #line 4
 #line hidden
 #line 5
-    await testRunner.GivenAsync("Login page is loaded", ((string)(null)), ((global::Reqnroll.Table)(null)), "Given ");
+    await testRunner.GivenAsync("Product page is loaded", ((string)(null)), ((global::Reqnroll.Table)(null)), "Given ");
 #line hidden
         }
         
@@ -163,48 +163,36 @@ this.ScenarioInitialize(scenarioInfo, ruleInfo);
 await this.FeatureBackgroundAsync();
 #line hidden
 #line 11
-    await testRunner.WhenAsync(string.Format("Enter username as {0} in login page", uSER_NAME), ((string)(null)), ((global::Reqnroll.Table)(null)), "When ");
+    await testRunner.WhenAsync(string.Format("Select following {0} in product page", pRODUCTS), ((string)(null)), ((global::Reqnroll.Table)(null)), "When ");
 #line hidden
 #line 12
- await testRunner.AndAsync("Enter password in login page", ((string)(null)), ((global::Reqnroll.Table)(null)), "And ");
-#line hidden
-#line 13
- await testRunner.AndAsync("Click submit button in login page", ((string)(null)), ((global::Reqnroll.Table)(null)), "And ");
-#line hidden
-#line 14
- await testRunner.ThenAsync("Product page is loaded", ((string)(null)), ((global::Reqnroll.Table)(null)), "Then ");
-#line hidden
-#line 15
- await testRunner.WhenAsync(string.Format("Select following {0} in product page", pRODUCTS), ((string)(null)), ((global::Reqnroll.Table)(null)), "When ");
-#line hidden
-#line 16
  await testRunner.AndAsync("Click on cart icon in product page", ((string)(null)), ((global::Reqnroll.Table)(null)), "And ");
 #line hidden
-#line 17
+#line 13
  await testRunner.ThenAsync("Cart page is loaded", ((string)(null)), ((global::Reqnroll.Table)(null)), "Then ");
 #line hidden
-#line 18
+#line 14
  await testRunner.WhenAsync(string.Format("Remove a {0} from cart", pRODUCT), ((string)(null)), ((global::Reqnroll.Table)(null)), "When ");
 #line hidden
-#line 19
+#line 15
  await testRunner.AndAsync("Click on checkout button in cart page", ((string)(null)), ((global::Reqnroll.Table)(null)), "And ");
 #line hidden
-#line 20
+#line 16
  await testRunner.ThenAsync("Checkout info page is loaded", ((string)(null)), ((global::Reqnroll.Table)(null)), "Then ");
 #line hidden
-#line 21
+#line 17
  await testRunner.WhenAsync(string.Format("Provide user information {0} and {1} and {2}", fIRST_NAME, lAST_NAME, pOSTAL_CODE), ((string)(null)), ((global::Reqnroll.Table)(null)), "When ");
 #line hidden
-#line 22
+#line 18
  await testRunner.AndAsync("Click on continue button in checkout info page", ((string)(null)), ((global::Reqnroll.Table)(null)), "And ");
 #line hidden
-#line 23
+#line 19
  await testRunner.ThenAsync("Payment page is loaded", ((string)(null)), ((global::Reqnroll.Table)(null)), "Then ");
 #line hidden
-#line 24
+#line 20
  await testRunner.WhenAsync("Click on finish button in payment page", ((string)(null)), ((global::Reqnroll.Table)(null)), "When ");
 #line hidden
-#line 25
+#line 21
  await testRunner.ThenAsync("Checkout complete page is loaded", ((string)(null)), ((global::Reqnroll.Table)(null)), "Then ");
 #line hidden
             }

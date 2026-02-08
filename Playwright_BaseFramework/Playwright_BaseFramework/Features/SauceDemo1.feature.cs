@@ -110,67 +110,19 @@ namespace Playwright_BaseFramework.Features
 #line 4
 #line hidden
 #line 5
-    await testRunner.GivenAsync("Login page is loaded", ((string)(null)), ((global::Reqnroll.Table)(null)), "Given ");
+    await testRunner.GivenAsync("Product page is loaded", ((string)(null)), ((global::Reqnroll.Table)(null)), "Given ");
 #line hidden
         }
         
         private static global::Reqnroll.Formatters.RuntimeSupport.FeatureLevelCucumberMessages InitializeCucumberMessages()
         {
-            return new global::Reqnroll.Formatters.RuntimeSupport.FeatureLevelCucumberMessages("Features/SauceDemo1.feature.ndjson", 4);
-        }
-        
-        [global::NUnit.Framework.TestAttribute()]
-        [global::NUnit.Framework.DescriptionAttribute("Test_1-Confirm the user is taken to the products page")]
-        [global::NUnit.Framework.CategoryAttribute("regression")]
-        [global::NUnit.Framework.TestCaseAttribute("standard_user", "0", null)]
-        public async global::System.Threading.Tasks.Task Test_1_ConfirmTheUserIsTakenToTheProductsPage(string uSER_NAME, string @__pickleIndex, string[] exampleTags)
-        {
-            string[] @__tags = new string[] {
-                    "regression"};
-            if ((exampleTags != null))
-            {
-                @__tags = System.Linq.Enumerable.ToArray(System.Linq.Enumerable.Concat(@__tags, exampleTags));
-            }
-            string[] tagsOfScenario = @__tags;
-            global::System.Collections.Specialized.OrderedDictionary argumentsOfScenario = new global::System.Collections.Specialized.OrderedDictionary();
-            argumentsOfScenario.Add("USER_NAME", uSER_NAME);
-            string pickleIndex = @__pickleIndex;
-            global::Reqnroll.ScenarioInfo scenarioInfo = new global::Reqnroll.ScenarioInfo("Test_1-Confirm the user is taken to the products page", null, tagsOfScenario, argumentsOfScenario, featureTags, pickleIndex);
-            string[] tagsOfRule = ((string[])(null));
-            global::Reqnroll.RuleInfo ruleInfo = null;
-#line 8
-this.ScenarioInitialize(scenarioInfo, ruleInfo);
-#line hidden
-            if ((global::Reqnroll.TagHelper.ContainsIgnoreTag(scenarioInfo.CombinedTags) || global::Reqnroll.TagHelper.ContainsIgnoreTag(featureTags)))
-            {
-                await testRunner.SkipScenarioAsync();
-            }
-            else
-            {
-                await this.ScenarioStartAsync();
-#line 4
-await this.FeatureBackgroundAsync();
-#line hidden
-#line 9
- await testRunner.WhenAsync(string.Format("Enter username as {0} in login page", uSER_NAME), ((string)(null)), ((global::Reqnroll.Table)(null)), "When ");
-#line hidden
-#line 10
- await testRunner.AndAsync("Enter password in login page", ((string)(null)), ((global::Reqnroll.Table)(null)), "And ");
-#line hidden
-#line 11
- await testRunner.AndAsync("Click submit button in login page", ((string)(null)), ((global::Reqnroll.Table)(null)), "And ");
-#line hidden
-#line 12
- await testRunner.ThenAsync("Product page is loaded", ((string)(null)), ((global::Reqnroll.Table)(null)), "Then ");
-#line hidden
-            }
-            await this.ScenarioCleanupAsync();
+            return new global::Reqnroll.Formatters.RuntimeSupport.FeatureLevelCucumberMessages("Features/SauceDemo1.feature.ndjson", 3);
         }
         
         [global::NUnit.Framework.TestAttribute()]
         [global::NUnit.Framework.DescriptionAttribute("Test_2-Add 3 items to basket and buy 2 items")]
         [global::NUnit.Framework.CategoryAttribute("regression")]
-        [global::NUnit.Framework.TestCaseAttribute("standard_user", "Backpack,Bolt T-Shirt,Bike Light", "Bolt T-Shirt", "rohit", "saraswat", "282007", "1", null)]
+        [global::NUnit.Framework.TestCaseAttribute("standard_user", "Backpack,Bolt T-Shirt,Bike Light", "Bolt T-Shirt", "rohit", "saraswat", "282007", "0", null)]
         public async global::System.Threading.Tasks.Task Test_2_Add3ItemsToBasketAndBuy2Items(string uSER_NAME, string pRODUCTS, string pRODUCT, string fIRST_NAME, string lAST_NAME, string pOSTAL_CODE, string @__pickleIndex, string[] exampleTags)
         {
             string[] @__tags = new string[] {
@@ -191,7 +143,7 @@ await this.FeatureBackgroundAsync();
             global::Reqnroll.ScenarioInfo scenarioInfo = new global::Reqnroll.ScenarioInfo("Test_2-Add 3 items to basket and buy 2 items", null, tagsOfScenario, argumentsOfScenario, featureTags, pickleIndex);
             string[] tagsOfRule = ((string[])(null));
             global::Reqnroll.RuleInfo ruleInfo = null;
-#line 19
+#line 8
 this.ScenarioInitialize(scenarioInfo, ruleInfo);
 #line hidden
             if ((global::Reqnroll.TagHelper.ContainsIgnoreTag(scenarioInfo.CombinedTags) || global::Reqnroll.TagHelper.ContainsIgnoreTag(featureTags)))
@@ -204,49 +156,37 @@ this.ScenarioInitialize(scenarioInfo, ruleInfo);
 #line 4
 await this.FeatureBackgroundAsync();
 #line hidden
-#line 20
-    await testRunner.WhenAsync(string.Format("Enter username as {0} in login page", uSER_NAME), ((string)(null)), ((global::Reqnroll.Table)(null)), "When ");
+#line 9
+    await testRunner.WhenAsync(string.Format("Select following {0} in product page", pRODUCTS), ((string)(null)), ((global::Reqnroll.Table)(null)), "When ");
 #line hidden
-#line 21
- await testRunner.AndAsync("Enter password in login page", ((string)(null)), ((global::Reqnroll.Table)(null)), "And ");
-#line hidden
-#line 22
- await testRunner.AndAsync("Click submit button in login page", ((string)(null)), ((global::Reqnroll.Table)(null)), "And ");
-#line hidden
-#line 23
- await testRunner.ThenAsync("Product page is loaded", ((string)(null)), ((global::Reqnroll.Table)(null)), "Then ");
-#line hidden
-#line 24
- await testRunner.WhenAsync(string.Format("Select following {0} in product page", pRODUCTS), ((string)(null)), ((global::Reqnroll.Table)(null)), "When ");
-#line hidden
-#line 25
+#line 10
  await testRunner.AndAsync("Click on cart icon in product page", ((string)(null)), ((global::Reqnroll.Table)(null)), "And ");
 #line hidden
-#line 26
+#line 11
  await testRunner.ThenAsync("Cart page is loaded", ((string)(null)), ((global::Reqnroll.Table)(null)), "Then ");
 #line hidden
-#line 27
+#line 12
  await testRunner.WhenAsync(string.Format("Remove a {0} from cart", pRODUCT), ((string)(null)), ((global::Reqnroll.Table)(null)), "When ");
 #line hidden
-#line 28
+#line 13
  await testRunner.AndAsync("Click on checkout button in cart page", ((string)(null)), ((global::Reqnroll.Table)(null)), "And ");
 #line hidden
-#line 29
+#line 14
  await testRunner.ThenAsync("Checkout info page is loaded", ((string)(null)), ((global::Reqnroll.Table)(null)), "Then ");
 #line hidden
-#line 30
+#line 15
  await testRunner.WhenAsync(string.Format("Provide user information {0} and {1} and {2}", fIRST_NAME, lAST_NAME, pOSTAL_CODE), ((string)(null)), ((global::Reqnroll.Table)(null)), "When ");
 #line hidden
-#line 31
+#line 16
  await testRunner.AndAsync("Click on continue button in checkout info page", ((string)(null)), ((global::Reqnroll.Table)(null)), "And ");
 #line hidden
-#line 32
+#line 17
  await testRunner.ThenAsync("Payment page is loaded", ((string)(null)), ((global::Reqnroll.Table)(null)), "Then ");
 #line hidden
-#line 33
+#line 18
  await testRunner.WhenAsync("Click on finish button in payment page", ((string)(null)), ((global::Reqnroll.Table)(null)), "When ");
 #line hidden
-#line 34
+#line 19
  await testRunner.ThenAsync("Checkout complete page is loaded", ((string)(null)), ((global::Reqnroll.Table)(null)), "Then ");
 #line hidden
             }

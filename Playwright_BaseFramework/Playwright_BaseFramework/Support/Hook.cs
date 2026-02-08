@@ -27,6 +27,7 @@ namespace Playwright_BaseFramework.Support
 
         // Base path for all test artifacts
         public static string BasePath => AppDomain.CurrentDomain.BaseDirectory;
+        public static string BaseUrl => Environment.GetEnvironmentVariable("PLAYWRIGHT_BaseUrl") ?? string.Empty;
         private static string TracesDirectory => Path.Combine(BasePath, "PlaywrightTraces");
         private static string ScreenshotsDirectory => Path.Combine(BasePath, "PlaywrightScreenshots");
         private static string ReportPath => Path.Combine(BasePath, "PlaywrightReport.html");
@@ -72,6 +73,29 @@ namespace Playwright_BaseFramework.Support
                 default:
                     throw new Exception("Please provide correct browser type in runsettings. Browser type can be Chrome, Edge, Firefox, Safari");
             }
+
+            var loginBrowserContext = await browser.NewContextAsync();
+            var loginPage = await loginBrowserContext.NewPageAsync();
+            await loginPage.GotoAsync(BaseUrl, new()
+            {
+                Timeout = 40_000
+            });
+
+            string username = Environment.GetEnvironmentVariable("PLAYWRIGHT_Username") ?? string.Empty;
+            string password = Environment.GetEnvironmentVariable("PLAYWRIGHT_Password") ?? string.Empty;
+
+            await loginPage.Locator("[data-test=\"username\"]").ClickAsync();
+            await loginPage.Locator("[data-test=\"username\"]").FillAsync(username);
+            await loginPage.Locator("[data-test=\"password\"]").ClickAsync();
+            await loginPage.Locator("[data-test=\"password\"]").FillAsync(password);
+            await loginPage.Locator("[data-test=\"login-button\"]").ClickAsync(new()
+            {
+                Delay = 5_000
+            });
+            await loginBrowserContext.StorageStateAsync(new()
+            {
+                Path = "auth.json"
+            });
         }
 
         [BeforeScenario]
@@ -83,7 +107,11 @@ namespace Playwright_BaseFramework.Support
             bool screenshots = bool.TryParse(Environment.GetEnvironmentVariable("PLAYWRIGHT_Tracing_Screenshots") ?? "true", out var ss) ? ss : true;
             bool snapshots = bool.TryParse(Environment.GetEnvironmentVariable("PLAYWRIGHT_Tracing_Snapshots") ?? "true", out var sp) ? sp : true;
 
-            this.browserContext = await browser.NewContextAsync();
+            this.browserContext = await browser.NewContextAsync(new BrowserNewContextOptions()
+            {
+               StorageStatePath = "auth.json"
+            });
+            
             await this.browserContext.Tracing.StartAsync(new()
             {
                 Screenshots = screenshots,

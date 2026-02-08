@@ -6,7 +6,14 @@
  <!-- Browser launch -->
  <PLAYWRIGHT_Headless>false</PLAYWRIGHT_Headless>
  <PLAYWRIGHT_SlowMo>2000</PLAYWRIGHT_SlowMo>
- <PLAYWRIGHT_BrowserType>Chrome</PLAYWRIGHT_BrowserType>	 
+ <PLAYWRIGHT_BrowserType>Chrome</PLAYWRIGHT_BrowserType>
+
+ <!-- Base URL for tests -->
+ <PLAYWRIGHT_BaseUrl>https://www.saucedemo.com/</PLAYWRIGHT_BaseUrl>
+
+ <!-- Login credentials -->
+ <PLAYWRIGHT_Username>standard_user</PLAYWRIGHT_Username>
+ <PLAYWRIGHT_Password>secret_sauce</PLAYWRIGHT_Password>
 
  <!-- Tracing options -->
  <PLAYWRIGHT_Tracing_Screenshots>true</PLAYWRIGHT_Tracing_Screenshots>

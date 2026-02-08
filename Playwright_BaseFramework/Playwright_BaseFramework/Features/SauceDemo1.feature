@@ -2,26 +2,11 @@
 Feature: SauceDemo1
 
 Background: 
-    Given Login page is loaded
-
-@regression
-Scenario Outline:Test_1-Confirm the user is taken to the products page	
-	When Enter username as <USER_NAME> in login page
-	And Enter password in login page
-	And Click submit button in login page
-	Then Product page is loaded
-    Examples:    
-	| USER_NAME     |
-	| standard_user |
-
+    Given Product page is loaded
 
 @regression
 Scenario Outline:  Test_2-Add 3 items to basket and buy 2 items
-    When Enter username as <USER_NAME> in login page
-	And Enter password in login page
-	And Click submit button in login page
-	Then Product page is loaded
-	When Select following <PRODUCTS> in product page
+    When Select following <PRODUCTS> in product page
 	And Click on cart icon in product page
 	Then Cart page is loaded
 	When Remove a <PRODUCT> from cart

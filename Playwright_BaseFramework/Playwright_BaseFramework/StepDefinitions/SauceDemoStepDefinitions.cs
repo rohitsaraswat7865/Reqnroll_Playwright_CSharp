@@ -19,74 +19,12 @@ namespace Playwright_BaseFramework.StepDefinitions
             this.scenarioContext = scenarioContext;
         }
 
-        [Given(@"Login page is loaded")]
-        public async Task GivenLoginPageIsLoaded()
-        {
-            try
-            {
-                await this.pageObject.Page.GotoAsync("https://www.saucedemo.com/", new()
-                {
-                    Timeout = 40_000
-                });
-
-            }
-            catch (Exception ex)
-            {
-                throw new Exception(ex.Message);
-            }
-
-        }
-
-        [When(@"Enter username as (.*) in login page")]
-        public async Task WhenEnterUsernameInLoginPage(string userName)
-        {
-            try
-            {
-                await this.pageObject.Page.Locator("[data-test=\"username\"]").ClickAsync();
-                await this.pageObject.Page.Locator("[data-test=\"username\"]").FillAsync(userName);                
-            }
-            catch(Exception ex)
-            {
-                throw new Exception(ex.Message);
-            }
-        }
-
-        [When(@"Enter password in login page")]
-        public async Task WhenEnterPasswordInLoginPage()
-        {
-            try
-            {
-                await this.pageObject.Page.Locator("[data-test=\"password\"]").ClickAsync();
-                await this.pageObject.Page.Locator("[data-test=\"password\"]").FillAsync("secret_sauce");
-
-            }
-            catch (Exception ex)
-            {
-                throw new Exception(ex.Message);
-            }
-        }
-
-        [When(@"Click submit button in login page")]
-        public async Task WhenClickSubmitButtonInLoginPage()
-        {
-            try
-            {
-                await this.pageObject.Page.Locator("[data-test=\"login-button\"]").ClickAsync(new()
-                {
-                    Delay = 5_000
-                });
-            }
-            catch (Exception ex)
-            {
-                throw new Exception(ex.Message);
-            }
-        }
-
-        [Then(@"Product page is loaded")]
+        [Given(@"Product page is loaded")]
         public async Task ThenProductPageIsLoaded()
         {
             try
             {
+                await this.pageObject.Page.GotoAsync($"{Hook.BaseUrl}inventory.html");
                 await this.pageObject.Page.WaitForURLAsync("**/inventory.html", new()
                 {
                     WaitUntil = WaitUntilState.DOMContentLoaded,
