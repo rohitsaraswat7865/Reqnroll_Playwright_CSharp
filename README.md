@@ -100,6 +100,9 @@ All test artifacts are stored in the output directory:
 - **PlaywrightTraces/**: Playwright trace files (.zip) for detailed debugging with Playwright Inspector
 - **PlaywrightScreenshots/**: Screenshot images captured during test execution
 
+### Report Structure
+The generated HTML report includes a summary header with total tests, passed count, failed count, and an overall success rate. Each scenario is listed in a table with feature name, scenario title, status, browser, execution time, and action links for trace files. The report also supports pagination when many scenarios are present, making it easy to review long test runs.
+
 ## Parallel Execution
 
 Tests are configured to run in parallel:
