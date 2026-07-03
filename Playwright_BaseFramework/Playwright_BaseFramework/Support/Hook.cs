@@ -6,22 +6,24 @@ using System.Text;
 using Microsoft.Playwright;
 using Reqnroll;
 
+#pragma warning disable CS8602 // Page and other nullable fields are initialized in BeforeScenario hook
+
 namespace Playwright_BaseFramework.Support
 {
     [Binding]
     public sealed class Hook
     {
-        public PageObject pageObject;
+        public PageObject pageObject = null!;
         public static IPlaywright? playwright;
         public static IBrowser? browser;
-        public IBrowserContext browserContext;
-        private ScenarioContext scenarioContext;
-        private FeatureContext featureContext;
-        private static string browserType;
+        public IBrowserContext browserContext = null!;
+        private ScenarioContext scenarioContext = null!;
+        private FeatureContext featureContext = null!;
+        private static string browserType = "Chrome";
         private static List<ScenarioReport> scenarioReports = new List<ScenarioReport>();
         private static readonly object scenarioReportsLock = new object();
-        private string traceFilePath;
-        private string screenshotPath;
+        private string traceFilePath = string.Empty;
+        private string screenshotPath = string.Empty;
         private static DateTime testRunStartTime;
         private static DateTime testRunEndTime;
         private List<StepExecution> scenarioSteps = new List<StepExecution>();
@@ -441,10 +443,12 @@ namespace Playwright_BaseFramework.Support
 
                 return string.Empty;
             }
-            catch (Exception ex)
+
+            catch (Exception _)
             {
                 return string.Empty;
             }
+
         }
 
         private string GetScenarioStatus()
@@ -778,22 +782,22 @@ namespace Playwright_BaseFramework.Support
 
     public class ScenarioReport
     {
-        public string ScenarioName { get; set; }
-        public string FeatureName { get; set; }
-        public string Status { get; set; }
-        public string ExecutionTime { get; set; }
-        public string BrowserType { get; set; }
-        public string TraceFilePath { get; set; }
-        public string ErrorMessage { get; set; }
-        public string ScreenshotPath { get; set; }
+        public string ScenarioName { get; set; } = string.Empty;
+        public string FeatureName { get; set; } = string.Empty;
+        public string Status { get; set; } = string.Empty;
+        public string ExecutionTime { get; set; } = string.Empty;
+        public string BrowserType { get; set; } = string.Empty;
+        public string TraceFilePath { get; set; } = string.Empty;
+        public string ErrorMessage { get; set; } = string.Empty;
+        public string ScreenshotPath { get; set; } = string.Empty;
         public List<StepExecution> Steps { get; set; } = new List<StepExecution>();
     }
 
     public class StepExecution
     {
-        public string StepDefinitionType { get; set; }
-        public string Text { get; set; }
-        public string Status { get; set; }
-        public string ErrorMessage { get; set; }
+        public string StepDefinitionType { get; set; } = string.Empty;
+        public string Text { get; set; } = string.Empty;
+        public string Status { get; set; } = string.Empty;
+        public string ErrorMessage { get; set; } = string.Empty;
     }
 }

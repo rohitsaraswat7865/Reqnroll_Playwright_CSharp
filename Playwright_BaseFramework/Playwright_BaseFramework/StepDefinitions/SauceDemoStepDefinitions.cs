@@ -4,14 +4,15 @@ using Playwright_BaseFramework.Support;
 using Reqnroll;
 using System.IO;
 
+#pragma warning disable CS8602 // Page is initialized in BeforeScenario hook, safe to use in step methods
 
 namespace Playwright_BaseFramework.StepDefinitions
 {
     [Binding]
     public sealed class SauceDemoStepDefinitions
     {
-        private ScenarioContext scenarioContext;
-        public PageObject pageObject;
+        private ScenarioContext scenarioContext = null!;
+        public PageObject pageObject = null!;
 
         public SauceDemoStepDefinitions(PageObject pageObject, ScenarioContext scenarioContext)
         {
@@ -248,7 +249,7 @@ namespace Playwright_BaseFramework.StepDefinitions
         {
             try
             {
-                await this.pageObject.Page.WaitForURLAsync("**/checkout-complete.html", new()
+                await this.pageObject?.Page!.WaitForURLAsync("**/checkout-complete.html", new()
                 {
                     WaitUntil = WaitUntilState.DOMContentLoaded,
                     Timeout = 20_000
