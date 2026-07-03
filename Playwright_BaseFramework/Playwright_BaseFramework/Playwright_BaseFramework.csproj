@@ -26,6 +26,14 @@
     <None Update="Playwright.runsettings">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <None Update="Support\ReportTemplate.css">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <TargetPath>Templates\ReportTemplate.css</TargetPath>
+    </None>
+    <None Update="Support\ReportTemplate.html">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <TargetPath>Templates\ReportTemplate.html</TargetPath>
+    </None>
   </ItemGroup>
 
 </Project>

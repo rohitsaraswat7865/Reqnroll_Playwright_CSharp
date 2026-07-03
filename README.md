@@ -7,13 +7,13 @@ This project is a comprehensive automation framework using [Playwright](https://
 ## Features
 
 - **Reqnroll (BDD)** - Gherkin-style feature files for behavior-driven test scenarios
-- **Playwright** - Modern browser automation with multi-browser support (Chrome, Edge, Firefox, Safari)
+- **Playwright** - Modern browser automation with Playwright for .NET
 - **Page Object Model** - Encapsulated page interactions and locators
-- **Parallel Execution** - Tests run in parallel with NUnit (4 parallel fixtures)
-- **Comprehensive Reporting** - HTML test reports with screenshots, traces, and detailed step logs
+- **Parallel Execution** - Tests can be configured to run with NUnit in parallel
+- **Comprehensive Reporting** - HTML report templates and browser trace/screenshot capture
 - **External Data Support** - Excel-based test data via Reqnroll.ExternalData plugin
-- **Trace & Screenshot Capture** - Automatic trace files and screenshots for debugging
-- **Cross-Browser Testing** - Configurable browser type, headless mode, and slow-motion execution
+- **Trace & Screenshot Capture** - Trace snapshots and screenshots enabled by default
+- **Configurable Execution** - Browser type, headless mode, slow motion, and base URL are defined in `Playwright.runsettings`
 
 ## Project Structure
 
@@ -29,6 +29,8 @@ Playwright_BaseFramework/
 ├── Support/
 │   ├── Hook.cs                     # Hooks for test setup/teardown, tracing, reporting
 │   ├── PageObject.cs               # Base page object wrapper
+│   ├── ReportTemplate.css          # HTML report stylesheet template
+│   ├── ReportTemplate.html         # HTML report template for custom output
 │   └── usings.cs                   # Global imports and parallelization config
 ├── Playwright_BaseFramework.csproj # Project file with NuGet dependencies
 ├── reqnroll.json                   # Reqnroll configuration with external data settings
@@ -42,11 +44,11 @@ Playwright_BaseFramework/
 ## Technology Stack
 
 - **.NET Target Framework**: .NET 10.0
-- **Testing Framework**: NUnit 4.4.0
-- **Playwright**: 1.57.0
-- **Reqnroll**: 3.2.1
-- **External Data**: Reqnroll.ExternalData 3.2.1
-- **Test SDK**: Microsoft.NET.Test.Sdk 18.0.1
+- **Testing Framework**: NUnit 4.6.1
+- **Playwright**: Microsoft.Playwright.NUnit 1.61.0
+- **Reqnroll**: Reqnroll.NUnit 3.3.4
+- **External Data**: Reqnroll.ExternalData 3.3.4
+- **Test SDK**: Microsoft.NET.Test.Sdk 18.7.0
 
 ## Getting Started
 
@@ -59,7 +61,7 @@ Playwright_BaseFramework/
 1. **Clone the repository**
    ```powershell
    git clone <repository-url>
-   cd Reqnroll_Playwright_CSharp\Playwright_BaseFramework
+   cd Reqnroll_Playwright_CSharp\Playwright_BaseFramework\Playwright_BaseFramework
    ```
 
 2. **Restore NuGet packages**
@@ -67,12 +69,18 @@ Playwright_BaseFramework/
    dotnet restore
    ```
 
-3. **Install Playwright browsers**
+3. **Clean and build the project**
+   ```powershell
+   dotnet clean
+   dotnet build
+   ```
+
+4. **Install Playwright browsers**
    ```powershell
    pwsh bin\Debug\net10.0\playwright.ps1 install
    ```
 
-4. **Run all tests**
+5. **Run all tests**
    ```powershell
    dotnet test --settings Playwright.runsettings
    ```
@@ -80,9 +88,8 @@ Playwright_BaseFramework/
 5. **View test report**
    ```powershell
    # Open the generated HTML report
-   & "bin\Debug\net10.0\PlaywrightReport.html"
+   Start-Process .\bin\Debug\net10.0\PlaywrightReport.html
    ```
-   <img width="854" height="418" alt="image" src="https://github.com/user-attachments/assets/8f0f8874-3343-4f1e-8942-ba4b7a1cd011" />
 
 
 ## Test Artifacts

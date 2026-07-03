@@ -116,7 +116,7 @@ namespace Playwright_BaseFramework.Features
         
         private static global::Reqnroll.Formatters.RuntimeSupport.FeatureLevelCucumberMessages InitializeCucumberMessages()
         {
-            return new global::Reqnroll.Formatters.RuntimeSupport.FeatureLevelCucumberMessages("Features/SauceDemo2.feature.ndjson", 5);
+            return new global::Reqnroll.Formatters.RuntimeSupport.FeatureLevelCucumberMessages("Features/SauceDemo2.feature.ndjson", 8);
         }
         
         [global::NUnit.Framework.TestAttribute()]
@@ -127,6 +127,9 @@ namespace Playwright_BaseFramework.Features
         [global::NUnit.Framework.TestCaseAttribute("standard_user", "Backpack,Bolt T-Shirt,Bike Light", "Bolt T-Shirt", "mark", "henry", "282008", "0", null)]
         [global::NUnit.Framework.TestCaseAttribute("standard_user", "Backpack,Bolt T-Shirt,Bike Light", "Bolt T-Shirt", "john", "wick", "201306", "1", null)]
         [global::NUnit.Framework.TestCaseAttribute("standard_user", "Backpack,Bolt T-Shirt,Bike Light", "Bolt T-Shirt", "blue", "ranger", "201305", "2", null)]
+        [global::NUnit.Framework.TestCaseAttribute("standard_user", "Backpack,Bolt T-Shirt,Bike Light", "Bolt T-Shirt", "red", "ranger", "201307", "3", null)]
+        [global::NUnit.Framework.TestCaseAttribute("standard_user", "Backpack,Bolt T-Shirt,Bike Light", "Bolt T-Shirt", "yellow", "ranger", "201308", "4", null)]
+        [global::NUnit.Framework.TestCaseAttribute("standard_user", "Backpack,Bolt T-Shirt,Bike Light", "Bolt T-Shirt", "test", "user", "201309", "5", null)]
         public async global::System.Threading.Tasks.Task Test_2_Add3ItemsToBasketAndBuy2Items(string uSER_NAME, string pRODUCTS, string pRODUCT, string fIRST_NAME, string lAST_NAME, string pOSTAL_CODE, string @__pickleIndex, string[] exampleTags)
         {
             string[] @__tags = new string[] {
