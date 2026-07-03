@@ -6,8 +6,6 @@ using System.Text;
 using Microsoft.Playwright;
 using Reqnroll;
 
-#pragma warning disable CS8602 // Page and other nullable fields are initialized in BeforeScenario hook
-
 namespace Playwright_BaseFramework.Support
 {
     [Binding]
@@ -125,7 +123,7 @@ namespace Playwright_BaseFramework.Support
             bool screenshots = bool.TryParse(Environment.GetEnvironmentVariable("PLAYWRIGHT_Tracing_Screenshots") ?? "true", out var ss) ? ss : true;
             bool snapshots = bool.TryParse(Environment.GetEnvironmentVariable("PLAYWRIGHT_Tracing_Snapshots") ?? "true", out var sp) ? sp : true;
 
-            this.browserContext = await browser.NewContextAsync(new BrowserNewContextOptions()
+                this.browserContext = await (browser ?? throw new InvalidOperationException("Browser instance is not initialized.")).NewContextAsync(new BrowserNewContextOptions()
             {
                StorageStatePath = "auth.json"
             });
@@ -139,7 +137,7 @@ namespace Playwright_BaseFramework.Support
         }
 
         [AfterStep]
-        public void AfterStep()
+        public async Task AfterStep()
         {
             try
             {
@@ -155,36 +153,121 @@ namespace Playwright_BaseFramework.Support
                     };
 
                     this.scenarioSteps.Add(stepExecution);
+
+                    // Capture screenshot on step failure, before context might close
+                    if (this.scenarioContext.ScenarioExecutionStatus != ScenarioExecutionStatus.OK && this.scenarioContext.TestError != null)
+                    {
+                        try
+                        {
+                            if (this.pageObject?.Page != null && !this.pageObject.Page.IsClosed)
+                            {
+                                string stepScreenshotFileName = $"{DateTime.Now.ToFileTime()}_{browserType}_step_{SanitizeFileName(stepInfo.Text)}.png";
+                                string stepScreenshotPath = Path.Combine(ScreenshotsDirectory, stepScreenshotFileName);
+                                await this.pageObject.Page.ScreenshotAsync(new PageScreenshotOptions { Path = stepScreenshotPath });
+                                if (string.IsNullOrEmpty(this.screenshotPath))
+                                {
+                                    this.screenshotPath = stepScreenshotPath;
+                                }
+                            }
+                        }
+                        catch (Exception screenshotEx)
+                        {
+                            // Screenshot might not be possible if the page is already closed; not fatal.
+                            TestContext.WriteLine($"[Hook.AfterStep] Step screenshot failed: {screenshotEx.Message}");
+                        }
+                    }
                 }
             }
             catch (Exception ex)
             {
-                throw new Exception(ex.Message);
+                // AfterStep failures shouldn't break the test flow, but should still be visible.
+                TestContext.WriteLine($"[Hook.AfterStep] Failed to record step result: {ex.Message}");
             }
         }
 
         [AfterScenario]
         public async Task AfterScenario()
         {
-            // Take screenshot only if scenario failed
-            if (this.scenarioContext.ScenarioExecutionStatus != ScenarioExecutionStatus.OK)
-            {
-                await TakeScreenshot();
-            }
-
-            // Save trace file with relative path
-            var traceFileName = $"{DateTime.Now.ToFileTime()}_{browserType}_{SanitizeFileName(this.scenarioContext.ScenarioInfo.Title)}_{this.scenarioContext.ScenarioExecutionStatus}.zip";
+            var scenarioTitle = this.scenarioContext?.ScenarioInfo?.Title ?? "UnknownScenario";
+            var traceFileName = $"{DateTime.Now.ToFileTime()}_{browserType}_{SanitizeFileName(scenarioTitle)}_{this.scenarioContext?.ScenarioExecutionStatus}.zip";
             this.traceFilePath = Path.Combine(TracesDirectory, traceFileName);
 
-            await this.browserContext.Tracing.StopAsync(new()
+            try
             {
-                Path = this.traceFilePath
-            });
+                if (this.scenarioContext?.ScenarioExecutionStatus != ScenarioExecutionStatus.OK)
+                {
+                    await TakeScreenshot();
+                }
+            }
+            catch (Exception ex)
+            {
+                this.screenshotPath = string.Empty;
+                this.scenarioSteps.Add(new StepExecution
+                {
+                    StepDefinitionType = "Hook",
+                    Text = "AfterScenario screenshot",
+                    Status = "Failed",
+                    ErrorMessage = $"Screenshot capture failed: {ex.Message}"
+                });
+            }
 
-            // Record scenario report
-            RecordScenarioReport(this.traceFilePath);
+            try
+            {
+                if (this.browserContext != null)
+                {
+                    await this.browserContext.Tracing.StopAsync(new()
+                    {
+                        Path = this.traceFilePath
+                    });
+                }
+            }
+            catch (Exception ex)
+            {
+                this.traceFilePath = string.Empty;
+                this.scenarioSteps.Add(new StepExecution
+                {
+                    StepDefinitionType = "Hook",
+                    Text = "Tracing stop",
+                    Status = "Failed",
+                    ErrorMessage = $"Trace stop failed: {ex.Message}"
+                });
+            }
 
-            await this.browserContext.DisposeAsync();
+            try
+            {
+                RecordScenarioReport(this.traceFilePath);
+            }
+            catch (Exception ex)
+            {
+                lock (scenarioReportsLock)
+                {
+                    scenarioReports.Add(new ScenarioReport
+                    {
+                        ScenarioName = scenarioTitle,
+                        FeatureName = GetFeatureNameFromContext(),
+                        Status = GetScenarioStatus(),
+                        ExecutionTime = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"),
+                        BrowserType = browserType,
+                        TraceFilePath = this.traceFilePath,
+                        ErrorMessage = string.IsNullOrEmpty(GetErrorMessage()) ? ex.Message : $"{GetErrorMessage()} | Report failure: {ex.Message}",
+                        ScreenshotPath = this.screenshotPath,
+                        Steps = this.scenarioSteps
+                    });
+                }
+            }
+
+            try
+            {
+                if (this.browserContext != null)
+                {
+                    await this.browserContext.DisposeAsync();
+                }
+            }
+            catch (Exception ex)
+            {
+                // Ignore disposal failures during teardown, but keep them visible.
+                TestContext.WriteLine($"[Hook.AfterScenario] BrowserContext disposal failed: {ex.Message}");
+            }
         }
 
         [AfterTestRun]
@@ -192,7 +275,10 @@ namespace Playwright_BaseFramework.Support
         {
             testRunEndTime = DateTime.Now;
 
-            await browser.DisposeAsync();
+            if (browser != null)
+            {
+                await browser.DisposeAsync();
+            }
             playwright?.Dispose();
 
             // Generate HTML report
@@ -354,17 +440,36 @@ namespace Playwright_BaseFramework.Support
         {
             try
             {
-                if (this.pageObject?.Page != null)
+                if (this.pageObject?.Page != null && !this.pageObject.Page.IsClosed)
                 {
                     string screenshotFileName = $"{DateTime.Now.ToFileTime()}_{browserType}_{SanitizeFileName(this.scenarioContext.ScenarioInfo.Title)}.png";
                     this.screenshotPath = Path.Combine(ScreenshotsDirectory, screenshotFileName);
 
                     await this.pageObject.Page.ScreenshotAsync(new PageScreenshotOptions { Path = this.screenshotPath });
                 }
+                else if (this.browserContext != null && !this.browserContext.IsClosed)
+                {
+                    // If the page is closed but the context is still open, create a new page to take a screenshot
+                    try
+                    {
+                        var tempPage = await this.browserContext.NewPageAsync();
+                        string screenshotFileName = $"{DateTime.Now.ToFileTime()}_{browserType}_{SanitizeFileName(this.scenarioContext.ScenarioInfo.Title)}_fallback.png";
+                        this.screenshotPath = Path.Combine(ScreenshotsDirectory, screenshotFileName);
+                        await tempPage.ScreenshotAsync(new PageScreenshotOptions { Path = this.screenshotPath });
+                        await tempPage.CloseAsync();
+                    }
+                    catch (Exception fallbackEx)
+                    {
+                        // Fallback screenshot creation also failed; leave screenshotPath empty.
+                        this.screenshotPath = string.Empty;
+                        TestContext.WriteLine($"[Hook.TakeScreenshot] Fallback screenshot failed: {fallbackEx.Message}");
+                    }
+                }
             }
-            catch (Exception ex)
+            catch
             {
-                throw new Exception(ex.Message);
+                // Log the error but don't throw; we still want the report to be generated even if screenshot fails
+                this.screenshotPath = string.Empty;
             }
         }
 
@@ -443,12 +548,10 @@ namespace Playwright_BaseFramework.Support
 
                 return string.Empty;
             }
-
-            catch (Exception _)
+            catch (Exception)
             {
                 return string.Empty;
             }
-
         }
 
         private string GetScenarioStatus()
@@ -538,10 +641,6 @@ namespace Playwright_BaseFramework.Support
                 return File.ReadAllText(HtmlTemplatePath);
             }
 
-            Console.WriteLine($"[Hook] WARNING: HTML template not found at '{HtmlTemplatePath}'. " +
-                               "Falling back to a minimal inline template. Ensure Templates\\ReportTemplate.html " +
-                               "has CopyToOutputDirectory set in the .csproj.");
-
             return "<!DOCTYPE html><html><head><meta charset=\"UTF-8\"><title>Test Report</title>" +
                    "<style>{{CSS_STYLES}}</style></head><body>" +
                    "<h1>Test Report</h1><p>Generated on: {{REPORT_DATE}}</p>" +
@@ -559,10 +658,6 @@ namespace Playwright_BaseFramework.Support
             {
                 return File.ReadAllText(CssTemplatePath);
             }
-
-            Console.WriteLine($"[Hook] WARNING: CSS template not found at '{CssTemplatePath}'. " +
-                               "The report will render unstyled. Ensure Templates\\ReportTemplate.css " +
-                               "has CopyToOutputDirectory set in the .csproj.");
 
             return string.Empty;
         }
@@ -582,15 +677,28 @@ namespace Playwright_BaseFramework.Support
             var totalDuration = testRunEndTime - testRunStartTime;
             var durationString = $"{totalDuration.Hours:D2}h {totalDuration.Minutes:D2}m {totalDuration.Seconds:D2}s";
 
-            var htmlTemplate = LoadHtmlTemplate();
+            // Extracting the partials here (before BuildTableRows runs) populates
+            // reportPartials so every Build* method below has access to the
+            // template's markup instead of hardcoded HTML.
+            var htmlTemplate = ExtractReportPartials(LoadHtmlTemplate());
             var cssStyles = LoadCssTemplate();
 
             var pendingItem = pendingCount > 0
-                ? $"<div class=\"summary-item pending\"><span class=\"label\">Pending</span><span class=\"value\">{pendingCount}</span></div>"
+                ? FillTemplate(GetPartial("SUMMARY_ITEM"), new Dictionary<string, string>
+                {
+                    ["{{ITEM_CLASS}}"] = "pending",
+                    ["{{ITEM_LABEL}}"] = "Pending",
+                    ["{{ITEM_COUNT}}"] = pendingCount.ToString()
+                })
                 : string.Empty;
 
             var undefinedItem = undefinedCount > 0
-                ? $"<div class=\"summary-item undefined\"><span class=\"label\">Undefined</span><span class=\"value\">{undefinedCount}</span></div>"
+                ? FillTemplate(GetPartial("SUMMARY_ITEM"), new Dictionary<string, string>
+                {
+                    ["{{ITEM_CLASS}}"] = "undefined",
+                    ["{{ITEM_LABEL}}"] = "Undefined",
+                    ["{{ITEM_COUNT}}"] = undefinedCount.ToString()
+                })
                 : string.Empty;
 
             var replacements = new Dictionary<string, string>
@@ -610,12 +718,150 @@ namespace Playwright_BaseFramework.Support
                 ["{{PAGE_SIZE}}"] = GetReportPageSize().ToString()
             };
 
-            var sb = new StringBuilder(htmlTemplate);
-            foreach (var kvp in replacements)
+            return FillTemplate(htmlTemplate, replacements);
+        }
+
+        /// <summary>
+        /// Names of every partial template Hook.cs expects to find inside the
+        /// HTML template's &lt;template id="report-partials"&gt; block.
+        /// </summary>
+        private static readonly string[] PartialNames =
+        {
+            "ROW", "STEP_ITEM", "NO_STEPS",
+            "ERROR_CELL_SCREENSHOT", "ERROR_CELL_TEXT", "ERROR_CELL_EMPTY", "SUMMARY_ITEM"
+        };
+
+        /// <summary>
+        /// Built-in markup used for any partial that isn't defined in the loaded
+        /// HTML template (e.g. an older template file, or the minimal inline
+        /// fallback used when the template file is missing entirely). Keeps
+        /// report generation resilient — presentation still lives in the
+        /// template file for anyone who wants to customize it, but nothing
+        /// breaks if a given block hasn't been added there yet.
+        /// </summary>
+        private static readonly Dictionary<string, string> DefaultPartials = new Dictionary<string, string>
+        {
+            ["ROW"] = """
+                <tr>
+                    <td>{{ROW_NUMBER}}</td>
+                    <td><strong>{{FEATURE_NAME}}</strong></td>
+                    <td>
+                        <details class="scenario-details">
+                            <summary>{{SCENARIO_NAME}}</summary>
+                            <div class="steps-container">
+                                <div class="steps-title">Test Steps ({{STEPS_COUNT}}):</div>
+                                <ol class="steps-list">
+                {{STEPS_HTML}}
+                                </ol>
+                            </div>
+                        </details>
+                    </td>
+                    <td class="{{STATUS_CLASS}}">{{STATUS_ICON}} {{STATUS}}</td>
+                    <td>{{BROWSER}}</td>
+                    <td>{{EXECUTION_TIME}}</td>
+                    <td><a href="{{TRACE_PATH}}" target="_blank" class="trace-link">View Trace</a></td>
+                {{ERROR_CELL}}
+                </tr>
+                """,
+            ["STEP_ITEM"] = """
+                <li class="step-item {{STEP_STATUS_CLASS}}">
+                    <span class="step-keyword">{{STEP_KEYWORD}}</span>
+                    <span class="step-text">{{STEP_TEXT}}</span>
+                    <span class="step-status">{{STEP_STATUS_ICON}}</span>
+                </li>
+                """,
+            ["NO_STEPS"] = """<li class="step-item">No steps recorded</li>""",
+            ["ERROR_CELL_SCREENSHOT"] = """
+                <td class="error-message">
+                    <details class="error-details">
+                        <summary>{{SUMMARY_TEXT}}</summary>
+                        <div class="screenshot-container">
+                            <img src="{{SCREENSHOT_PATH}}" alt="Failure Screenshot" class="failure-screenshot">
+                        </div>
+                    </details>
+                </td>
+                """,
+            ["ERROR_CELL_TEXT"] = """<td class="error-message">{{MESSAGE}}</td>""",
+            ["ERROR_CELL_EMPTY"] = """<td class="error-message">-</td>""",
+            ["SUMMARY_ITEM"] = """<div class="summary-item {{ITEM_CLASS}}"><span class="label">{{ITEM_LABEL}}</span><span class="value">{{ITEM_COUNT}}</span></div>"""
+        };
+
+        /// <summary>
+        /// Partial templates extracted from the current HTML template for this
+        /// report generation run. Populated by <see cref="ExtractReportPartials"/>.
+        /// </summary>
+        private static readonly Dictionary<string, string> reportPartials = new Dictionary<string, string>();
+
+        /// <summary>
+        /// Finds the &lt;template id="report-partials"&gt; block in the raw HTML
+        /// template, pulls out each named TEMPLATE:/END: section into
+        /// <see cref="reportPartials"/>, and returns the HTML with that whole
+        /// block removed so it never ends up in the written report. If the
+        /// block or a given partial isn't present, generation falls back to
+        /// <see cref="DefaultPartials"/> — see <see cref="GetPartial"/>.
+        /// </summary>
+        private static string ExtractReportPartials(string html)
+        {
+            reportPartials.Clear();
+
+            const string wrapperStart = "<template id=\"report-partials\">";
+            const string wrapperEnd = "</template>";
+
+            var wrapperStartIndex = html.IndexOf(wrapperStart, StringComparison.Ordinal);
+            if (wrapperStartIndex < 0)
+            {
+                return html;
+            }
+
+            var wrapperEndIndex = html.IndexOf(wrapperEnd, wrapperStartIndex, StringComparison.Ordinal);
+            if (wrapperEndIndex < 0)
+            {
+                return html;
+            }
+
+            var contentStart = wrapperStartIndex + wrapperStart.Length;
+            var partialsBlock = html.Substring(contentStart, wrapperEndIndex - contentStart);
+
+            foreach (var name in PartialNames)
+            {
+                var startMarker = $"<!-- TEMPLATE:{name} -->";
+                var endMarker = $"<!-- END:{name} -->";
+
+                var startIndex = partialsBlock.IndexOf(startMarker, StringComparison.Ordinal);
+                var endIndex = partialsBlock.IndexOf(endMarker, StringComparison.Ordinal);
+
+                if (startIndex >= 0 && endIndex > startIndex)
+                {
+                    var blockContentStart = startIndex + startMarker.Length;
+                    reportPartials[name] = partialsBlock.Substring(blockContentStart, endIndex - blockContentStart).Trim();
+                }
+            }
+
+            var removeEnd = wrapperEndIndex + wrapperEnd.Length;
+            return html.Remove(wrapperStartIndex, removeEnd - wrapperStartIndex);
+        }
+
+        /// <summary>
+        /// Returns the named partial as defined in the HTML template, or the
+        /// built-in default markup if the template doesn't define it.
+        /// </summary>
+        private static string GetPartial(string name)
+        {
+            return reportPartials.TryGetValue(name, out var value) ? value : DefaultPartials[name];
+        }
+
+        /// <summary>
+        /// Fills a template string by replacing every {{PLACEHOLDER}} key with
+        /// its corresponding value. Shared by every Build* method so there's a
+        /// single place that does template substitution.
+        /// </summary>
+        private static string FillTemplate(string template, Dictionary<string, string> values)
+        {
+            var sb = new StringBuilder(template);
+            foreach (var kvp in values)
             {
                 sb.Replace(kvp.Key, kvp.Value);
             }
-
             return sb.ToString();
         }
 
@@ -657,28 +903,21 @@ namespace Playwright_BaseFramework.Support
             var stepsHtml = BuildStepsHtml(report.Steps);
             var errorCell = BuildErrorCell(report, relativeScreenshotPath);
 
-            return $"""
-                                <tr>
-                                    <td>{rowNumber}</td>
-                                    <td><strong>{HtmlEncode(report.FeatureName)}</strong></td>
-                                    <td>
-                                        <details class="scenario-details">
-                                            <summary>{HtmlEncode(report.ScenarioName)}</summary>
-                                            <div class="steps-container">
-                                                <div class="steps-title">Test Steps ({report.Steps.Count}):</div>
-                                                <ol class="steps-list">
-                                {stepsHtml}
-                                                </ol>
-                                            </div>
-                                        </details>
-                                    </td>
-                                    <td class="{statusClass}">{statusIcon} {report.Status}</td>
-                                    <td>{report.BrowserType}</td>
-                                    <td>{report.ExecutionTime}</td>
-                                    <td><a href="{relativeTracePath}" target="_blank" class="trace-link">View Trace</a></td>
-                                {errorCell}
-                                </tr>
-                        """;
+            return FillTemplate(GetPartial("ROW"), new Dictionary<string, string>
+            {
+                ["{{ROW_NUMBER}}"] = rowNumber.ToString(),
+                ["{{FEATURE_NAME}}"] = HtmlEncode(report.FeatureName),
+                ["{{SCENARIO_NAME}}"] = HtmlEncode(report.ScenarioName),
+                ["{{STEPS_COUNT}}"] = report.Steps.Count.ToString(),
+                ["{{STEPS_HTML}}"] = stepsHtml,
+                ["{{STATUS_CLASS}}"] = statusClass,
+                ["{{STATUS_ICON}}"] = statusIcon,
+                ["{{STATUS}}"] = report.Status,
+                ["{{BROWSER}}"] = report.BrowserType,
+                ["{{EXECUTION_TIME}}"] = report.ExecutionTime,
+                ["{{TRACE_PATH}}"] = relativeTracePath,
+                ["{{ERROR_CELL}}"] = errorCell
+            });
         }
 
         /// <summary>
@@ -688,7 +927,7 @@ namespace Playwright_BaseFramework.Support
         {
             if (steps == null || steps.Count == 0)
             {
-                return """                                        <li class="step-item">No steps recorded</li>""";
+                return GetPartial("NO_STEPS");
             }
 
             return string.Join(Environment.NewLine, steps.Select(BuildStepItem));
@@ -713,50 +952,57 @@ namespace Playwright_BaseFramework.Support
                 _ => "⏸"
             };
 
-            var errorHtml = string.IsNullOrEmpty(step.ErrorMessage)
-                ? string.Empty
-                : $"""
-
-                                                            <div class="step-error">{HtmlEncode(step.ErrorMessage)}</div>
-                        """;
-
-            return $"""
-                                                        <li class="step-item {stepStatusClass}">
-                                                            <span class="step-keyword">{HtmlEncode(step.StepDefinitionType)}</span>
-                                                            <span class="step-text">{HtmlEncode(step.Text)}</span>
-                                                            <span class="step-status">{stepStatusIcon}</span>{errorHtml}
-                                                        </li>
-                        """;
+            return FillTemplate(GetPartial("STEP_ITEM"), new Dictionary<string, string>
+            {
+                ["{{STEP_STATUS_CLASS}}"] = stepStatusClass,
+                ["{{STEP_KEYWORD}}"] = HtmlEncode(step.StepDefinitionType),
+                ["{{STEP_TEXT}}"] = HtmlEncode(step.Text),
+                ["{{STEP_STATUS_ICON}}"] = stepStatusIcon
+            });
         }
 
         /// <summary>
         /// Builds the trailing error/screenshot &lt;td&gt; for a row based on scenario status.
+        /// Only names which step failed — no exception message, stack trace, or
+        /// Playwright diagnostic log is ever rendered into the report.
         /// </summary>
         private static string BuildErrorCell(ScenarioReport report, string relativeScreenshotPath)
         {
             if (report.Status == "Failed" && !string.IsNullOrEmpty(report.ScreenshotPath))
             {
-                var summaryText = string.IsNullOrEmpty(report.ErrorMessage) ? "View Screenshot" : report.ErrorMessage;
+                var failingStepText = GetFailingStepText(report);
 
-                return $"""
-                                    <td class="error-message">
-                                        <details class="error-details">
-                                            <summary>{HtmlEncode(summaryText)}</summary>
-                                            <div class="screenshot-container">
-                                                <img src="{relativeScreenshotPath}" alt="Failure Screenshot" class="failure-screenshot">
-                                            </div>
-                                        </details>
-                                    </td>
-                        """;
+                return FillTemplate(GetPartial("ERROR_CELL_SCREENSHOT"), new Dictionary<string, string>
+                {
+                    ["{{SUMMARY_TEXT}}"] = HtmlEncode($"Step failed: {failingStepText}"),
+                    ["{{SCREENSHOT_PATH}}"] = relativeScreenshotPath
+                });
             }
 
             if (report.Status == "Failed")
             {
-                var message = string.IsNullOrEmpty(report.ErrorMessage) ? "-" : report.ErrorMessage;
-                return $"""                                    <td class="error-message">{HtmlEncode(message)}</td>""";
+                var failingStepText = GetFailingStepText(report);
+                return FillTemplate(GetPartial("ERROR_CELL_TEXT"), new Dictionary<string, string>
+                {
+                    ["{{MESSAGE}}"] = HtmlEncode($"Step failed: {failingStepText}")
+                });
             }
 
-            return """                                    <td class="error-message">-</td>""";
+            return GetPartial("ERROR_CELL_EMPTY");
+        }
+
+        /// <summary>
+        /// Returns the keyword + text of the first failed step in a scenario
+        /// (e.g. "Then Payment page is loaded"), so the report can point at
+        /// which step failed without including the exception message or any
+        /// stack trace / diagnostic log.
+        /// </summary>
+        private static string GetFailingStepText(ScenarioReport report)
+        {
+            var failingStep = report.Steps?.FirstOrDefault(s => s.Status == "Failed");
+            return failingStep != null
+                ? $"{failingStep.StepDefinitionType} {failingStep.Text}".Trim()
+                : "Unknown step";
         }
 
         private static string HtmlEncode(string text)

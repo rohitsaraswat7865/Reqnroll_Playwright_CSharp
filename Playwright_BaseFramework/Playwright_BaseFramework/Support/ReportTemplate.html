@@ -115,5 +115,74 @@
             renderPage(1);
         })();
     </script>
+
+    <!--
+        Reusable partial templates used by Hook.cs to build repeated markup
+        (table rows, step items, error cells). Wrapped in a <template> tag so
+        browsers never render, fetch, or execute anything inside it — Hook.cs
+        extracts each named block by its TEMPLATE:/END: comment markers and
+        strips this whole wrapper out of the document before writing the
+        final report to disk. Edit the markup here to restyle the report;
+        no C# changes required as long as the {{PLACEHOLDER}} names are kept.
+    -->
+    <template id="report-partials">
+<!-- TEMPLATE:ROW -->
+<tr>
+    <td>{{ROW_NUMBER}}</td>
+    <td><strong>{{FEATURE_NAME}}</strong></td>
+    <td>
+        <details class="scenario-details">
+            <summary>{{SCENARIO_NAME}}</summary>
+            <div class="steps-container">
+                <div class="steps-title">Test Steps ({{STEPS_COUNT}}):</div>
+                <ol class="steps-list">
+{{STEPS_HTML}}
+                </ol>
+            </div>
+        </details>
+    </td>
+    <td class="{{STATUS_CLASS}}">{{STATUS_ICON}} {{STATUS}}</td>
+    <td>{{BROWSER}}</td>
+    <td>{{EXECUTION_TIME}}</td>
+    <td><a href="{{TRACE_PATH}}" target="_blank" class="trace-link">View Trace</a></td>
+{{ERROR_CELL}}
+</tr>
+<!-- END:ROW -->
+
+<!-- TEMPLATE:STEP_ITEM -->
+<li class="step-item {{STEP_STATUS_CLASS}}">
+    <span class="step-keyword">{{STEP_KEYWORD}}</span>
+    <span class="step-text">{{STEP_TEXT}}</span>
+    <span class="step-status">{{STEP_STATUS_ICON}}</span>
+</li>
+<!-- END:STEP_ITEM -->
+
+<!-- TEMPLATE:NO_STEPS -->
+<li class="step-item">No steps recorded</li>
+<!-- END:NO_STEPS -->
+
+<!-- TEMPLATE:ERROR_CELL_SCREENSHOT -->
+<td class="error-message">
+    <details class="error-details">
+        <summary>{{SUMMARY_TEXT}}</summary>
+        <div class="screenshot-container">
+            <img src="{{SCREENSHOT_PATH}}" alt="Failure Screenshot" class="failure-screenshot">
+        </div>
+    </details>
+</td>
+<!-- END:ERROR_CELL_SCREENSHOT -->
+
+<!-- TEMPLATE:ERROR_CELL_TEXT -->
+<td class="error-message">{{MESSAGE}}</td>
+<!-- END:ERROR_CELL_TEXT -->
+
+<!-- TEMPLATE:ERROR_CELL_EMPTY -->
+<td class="error-message">-</td>
+<!-- END:ERROR_CELL_EMPTY -->
+
+<!-- TEMPLATE:SUMMARY_ITEM -->
+<div class="summary-item {{ITEM_CLASS}}"><span class="label">{{ITEM_LABEL}}</span><span class="value">{{ITEM_COUNT}}</span></div>
+<!-- END:SUMMARY_ITEM -->
+    </template>
 </body>
 </html>

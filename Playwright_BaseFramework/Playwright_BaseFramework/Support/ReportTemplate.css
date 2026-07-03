@@ -253,17 +253,6 @@ body {
     color: #ffc107;
 }
 
-.step-error {
-    width: 100%;
-    margin-top: 8px;
-    padding: 8px;
-    background: #ffe6e6;
-    border-left: 3px solid #dc3545;
-    color: #dc3545;
-    font-size: 0.85em;
-    border-radius: 2px;
-}
-
 .status-passed {
     color: #28a745;
     font-weight: bold;
@@ -305,6 +294,7 @@ body {
     font-size: 0.85em;
     max-width: 300px;
     word-break: break-word;
+    white-space: pre-wrap;
 }
 
 .error-details {
@@ -319,6 +309,9 @@ body {
     border-radius: 4px;
     user-select: none;
     transition: all 0.3s;
+    white-space: pre-wrap;
+    word-break: break-word;
+    font-family: 'Consolas', 'Courier New', monospace;
 }
 
 .error-details summary:hover {
