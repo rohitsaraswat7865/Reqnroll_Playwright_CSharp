@@ -98,7 +98,7 @@ All test artifacts are stored in the output directory:
 
 - **PlaywrightReport.html**: Interactive HTML report with scenario details and step logs
 <img width="1897" height="914" alt="image" src="https://github.com/user-attachments/assets/8a5bfd84-ba1a-4184-93c1-5bc71cc4b250" />
-
+-
 <img width="1892" height="907" alt="image" src="https://github.com/user-attachments/assets/345f0495-edba-4a48-b02c-238b69d34d52" />
 
 - **PlaywrightTraces/**: Playwright trace files (.zip) for detailed debugging with Playwright Inspector
