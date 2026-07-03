@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Report</title>
+    <style>
+{{CSS_STYLES}}
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Test Report</h1>
+            <div class="header-info">
+                <p class="report-date">Generated on: {{REPORT_DATE}}</p>
+                <p class="runtime-info">Start Time: {{START_TIME}} | End Time: {{END_TIME}} | Duration: {{DURATION}}</p>
+            </div>
+        </div>
+
+        <div class="summary">
+            <div class="summary-card">
+                <div class="summary-item total"><span class="label">Total Tests</span><span class="value">{{TOTAL_COUNT}}</span></div>
+                <div class="summary-item passed"><span class="label">Passed</span><span class="value">{{PASSED_COUNT}}</span></div>
+                <div class="summary-item failed"><span class="label">Failed</span><span class="value">{{FAILED_COUNT}}</span></div>
+                {{PENDING_ITEM}}
+                {{UNDEFINED_ITEM}}
+                <div class="summary-item success-rate"><span class="label">Success Rate</span><span class="value">{{SUCCESS_RATE}}%</span></div>
+            </div>
+        </div>
+
+        <div class="results-section">
+            <h2>Test Results</h2>
+            <table class="results-table" id="results-table" data-page-size="{{PAGE_SIZE}}">
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Feature</th>
+                        <th>Scenario Name</th>
+                        <th>Status</th>
+                        <th>Browser</th>
+                        <th>Execution Time</th>
+                        <th>Trace File</th>
+                        <th>Error Details</th>
+                    </tr>
+                </thead>
+                <tbody>
+{{TABLE_ROWS}}
+                </tbody>
+            </table>
+
+            <div class="pagination" id="pagination-controls">
+                <button type="button" id="pagination-first" class="pagination-btn">&laquo; First</button>
+                <button type="button" id="pagination-prev" class="pagination-btn">&lsaquo; Prev</button>
+                <span class="pagination-info" id="pagination-info"></span>
+                <button type="button" id="pagination-next" class="pagination-btn">Next &rsaquo;</button>
+                <button type="button" id="pagination-last" class="pagination-btn">Last &raquo;</button>
+            </div>
+        </div>
+
+        <div class="footer">
+            <p>Powered by Playwright &amp; Reqnroll</p>
+        </div>
+    </div>
+
+    <script>
+        (function () {
+            var table = document.getElementById('results-table');
+            if (!table) return;
+
+            var tbody = table.querySelector('tbody');
+            var rows = Array.prototype.slice.call(tbody.querySelectorAll('tr'));
+            var pageSize = parseInt(table.getAttribute('data-page-size'), 10) || 6;
+            var totalRows = rows.length;
+            var totalPages = Math.max(1, Math.ceil(totalRows / pageSize));
+            var currentPage = 1;
+
+            var controls = document.getElementById('pagination-controls');
+            var infoEl = document.getElementById('pagination-info');
+            var firstBtn = document.getElementById('pagination-first');
+            var prevBtn = document.getElementById('pagination-prev');
+            var nextBtn = document.getElementById('pagination-next');
+            var lastBtn = document.getElementById('pagination-last');
+
+            function renderPage(page) {
+                currentPage = Math.min(Math.max(page, 1), totalPages);
+
+                var start = (currentPage - 1) * pageSize;
+                var end = start + pageSize;
+
+                rows.forEach(function (row, index) {
+                    row.style.display = (index >= start && index < end) ? '' : 'none';
+                });
+
+                var rangeStart = totalRows === 0 ? 0 : start + 1;
+                var rangeEnd = Math.min(end, totalRows);
+                infoEl.textContent = 'Showing ' + rangeStart + '-' + rangeEnd + ' of ' + totalRows +
+                    ' | Page ' + currentPage + ' of ' + totalPages;
+
+                firstBtn.disabled = currentPage === 1;
+                prevBtn.disabled = currentPage === 1;
+                nextBtn.disabled = currentPage === totalPages;
+                lastBtn.disabled = currentPage === totalPages;
+            }
+
+            if (totalRows <= pageSize) {
+                controls.style.display = 'none';
+            } else {
+                firstBtn.addEventListener('click', function () { renderPage(1); });
+                prevBtn.addEventListener('click', function () { renderPage(currentPage - 1); });
+                nextBtn.addEventListener('click', function () { renderPage(currentPage + 1); });
+                lastBtn.addEventListener('click', function () { renderPage(totalPages); });
+            }
+
+            renderPage(1);
+        })();
+    </script>
+</body>
+</html>
