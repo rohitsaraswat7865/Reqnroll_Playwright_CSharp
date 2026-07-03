@@ -97,6 +97,8 @@ Playwright_BaseFramework/
 All test artifacts are stored in the output directory:
 
 - **PlaywrightReport.html**: Interactive HTML report with scenario details and step logs
+<img width="1919" height="905" alt="image" src="https://github.com/user-attachments/assets/2dc6225e-5db0-4e74-97aa-f1e2b2827fd5" />
+
 - **PlaywrightTraces/**: Playwright trace files (.zip) for detailed debugging with Playwright Inspector
 - **PlaywrightScreenshots/**: Screenshot images captured during test execution
 
