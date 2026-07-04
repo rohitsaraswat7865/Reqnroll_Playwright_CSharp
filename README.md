@@ -26,7 +26,7 @@ Playwright_BaseFramework/
 │   └── [generated .feature.cs]     # Auto-generated step binding code
 ├── StepDefinitions/
 │   └── SauceDemoStepDefinitions.cs # Step definitions for SauceDemo tests
-├── Support/
+**├── Support/
 │   ├── Hook.cs                     # Hooks for test setup/teardown, tracing, reporting
 │   ├── PageObject.cs               # Base page object wrapper
 │   ├── ReportTemplate.css          # HTML report stylesheet template
@@ -38,7 +38,7 @@ Playwright_BaseFramework/
 └── bin/Debug/net10.0/
     ├── PlaywrightReport.html       # Test execution report
     ├── PlaywrightTraces/           # Browser execution traces
-    └── PlaywrightScreenshots/      # Screenshots from test runs
+    └── PlaywrightScreenshots/      # Screenshots from test runs**
 ```
 
 ## Technology Stack
@@ -133,9 +133,9 @@ pwsh bin\Debug\net10.0\playwright.ps1 install
 - Verify environment variables in `Playwright.runsettings`
 
 ### Debugging Tests
-1. Set `PLAYWRIGHT_Headless` to `false` to see browser execution
-2. Set `PLAYWRIGHT_SlowMo` to higher value (e.g., 5000) to slow execution
-3. Check trace files in `PlaywrightTraces/` using Playwright Inspector
+1. Set **PLAYWRIGHT_Headless=false** to watch the browser execute the tests.
+2. Set **PLAYWRIGHT_SlowMo** to a higher value (e.g., 5000) to slow down test execution, making it easier to observe test behavior and debug issues, especially on slow or unstable network connections.
+3. Check the trace files in the PlaywrightTraces/ directory using the Playwright Trace Viewer for detailed execution logs, screenshots, network activity, and DOM snapshots.
 
 ## Useful References
 
