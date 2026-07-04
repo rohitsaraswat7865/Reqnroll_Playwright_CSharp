@@ -162,7 +162,9 @@ All test artifacts are stored in the output directory:
 ### 📋 Report Structure
 
 The generated HTML report includes a **summary header** with total tests, passed count, failed count, and overall success rate. Each scenario is listed in a table with feature name, scenario title, status, browser, execution time, and action links for trace files. The report also supports **pagination** when many scenarios are present — making it easy to review long test runs.
-
+<img width="1897" height="914" alt="Screenshot 2026-07-03 140030" src="https://github.com/user-attachments/assets/9092430e-dce9-40ee-bf11-9b142b7d73df" />
+---
+<img width="1892" height="907" alt="Screenshot 2026-07-03 173256" src="https://github.com/user-attachments/assets/3a6c03a9-0642-4f46-9b07-3fd8860fb3b1" />
 ---
 
 ## ⚡ Parallel Execution
