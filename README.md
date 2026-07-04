@@ -128,8 +128,8 @@ pwsh bin\Debug\net10.0\playwright.ps1 install
 ```
 
 ### Test Execution Failures
-- Check `PlaywrightReport.html` for detailed error logs
-- Review `PlaywrightTraces/` files using Playwright Inspector
+- Check `PlaywrightReport.html` for errors
+- Review `PlaywrightTraces/` files using Playwright Trace Viewer
 - Verify environment variables in `Playwright.runsettings`
 
 ### Debugging Tests
