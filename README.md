@@ -1,150 +1,235 @@
-# ReqNRoll-BDD-Playwright-C# (Base Framework | Template)
+<div align="center">
 
-This project is a comprehensive automation framework using [Playwright](https://playwright.dev/dotnet/) and [Reqnroll](https://reqnroll.net/) for end-to-end testing of web applications in C#. The framework demonstrates BDD-style test automation with modern best practices and comprehensive reporting.
+# 🎭 ReqNRoll BDD Playwright C#
 
-**[25102025]** Migrated framework from Specflow to Reqnroll for enhanced functionality and community support.
+### Base Framework Template
 
-## Features
+**A comprehensive, production-ready end-to-end testing framework combining BDD and modern browser automation**
 
-- **Reqnroll (BDD)** - Gherkin-style feature files for behavior-driven test scenarios
-- **Playwright** - Modern browser automation with Playwright for .NET
-- **Page Object Model** - Encapsulated page interactions and locators
-- **Parallel Execution** - Tests can be configured to run with NUnit in parallel
-- **Comprehensive Reporting** - HTML report templates and browser trace/screenshot capture
-- **External Data Support** - Excel-based test data via Reqnroll.ExternalData plugin
-- **Trace & Screenshot Capture** - Trace snapshots and screenshots enabled by default
-- **Configurable Execution** - Browser type, headless mode, slow motion, and base URL are defined in `Playwright.runsettings`
+[![.NET](https://img.shields.io/badge/.NET-10.0-512BD4?style=for-the-badge&logo=dotnet&logoColor=white)](https://dotnet.microsoft.com/)
+[![Playwright](https://img.shields.io/badge/Playwright-1.61.0-2EAD33?style=for-the-badge&logo=playwright&logoColor=white)](https://playwright.dev/dotnet/)
+[![Reqnroll](https://img.shields.io/badge/Reqnroll-3.3.4-FF6C37?style=for-the-badge)](https://reqnroll.net/)
+[![NUnit](https://img.shields.io/badge/NUnit-4.6.1-1094AB?style=for-the-badge)](https://nunit.org/)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg?style=for-the-badge)](LICENSE)
 
-## Project Structure
+</div>
+
+---
+
+> 📢 **[25.10.2025]** Migrated framework from SpecFlow → **Reqnroll** for enhanced functionality and community support.
+
+---
+
+## ✨ Features
+
+<table>
+<tr>
+<td width="50%">
+
+**🥒 Reqnroll (BDD)**
+Gherkin-style feature files for behavior-driven test scenarios
+
+**🎭 Playwright**
+Modern, fast browser automation with Playwright for .NET
+
+**📦 Page Object Model**
+Encapsulated page interactions and locators for maintainability
+
+**⚡ Parallel Execution**
+Tests run in parallel via NUnit for faster feedback
+
+</td>
+<td width="50%">
+
+**📊 Comprehensive Reporting**
+HTML report templates with browser trace & screenshot capture
+
+**📁 External Data Support**
+Excel-based test data via `Reqnroll.ExternalData` plugin
+
+**🔍 Trace & Screenshot Capture**
+Enabled by default for effortless debugging
+
+**⚙️ Configurable Execution**
+Browser type, headless mode, slow-mo & base URL via `.runsettings`
+
+</td>
+</tr>
+</table>
+
+---
+
+## 🗂️ Project Structure
 
 ```
 Playwright_BaseFramework/
-├── Features/
-│   ├── SauceDemo1.feature          # Feature file for login and product page tests
-│   ├── SauceDemo2.feature          # Feature file with external data source
-│   ├── Test.xlsx                   # External test data file
-│   └── [generated .feature.cs]     # Auto-generated step binding code
-├── StepDefinitions/
-│   └── SauceDemoStepDefinitions.cs # Step definitions for SauceDemo tests
-├── Support/
-│   ├── Hook.cs                     # Hooks for test setup/teardown, tracing, reporting
-│   ├── PageObject.cs               # Base page object wrapper
-│   ├── ReportTemplate.css          # HTML report stylesheet template
-│   ├── ReportTemplate.html         # HTML report template for custom output
-│   └── usings.cs                   # Global imports and parallelization config
-├── Playwright_BaseFramework.csproj # Project file with NuGet dependencies
-├── reqnroll.json                   # Reqnroll configuration with external data settings
-├── Playwright.runsettings          # Test run settings (browser, headless, etc.)
-└── bin/Debug/net10.0/
-    ├── PlaywrightReport.html       # Test execution report
-    ├── PlaywrightTraces/           # Browser execution traces
-    └── PlaywrightScreenshots/      # Screenshots from test runs
+├── 📁 Features/
+│   ├── 📄 SauceDemo1.feature          # Login & product page tests
+│   ├── 📄 SauceDemo2.feature          # Tests using external data source
+│   ├── 📊 Test.xlsx                   # External test data file
+│   └── 📄 [generated .feature.cs]     # Auto-generated step bindings
+├── 📁 StepDefinitions/
+│   └── 🧩 SauceDemoStepDefinitions.cs # Step definitions for SauceDemo tests
+├── 📁 Support/
+│   ├── 🪝 Hook.cs                     # Setup/teardown, tracing, reporting hooks
+│   ├── 🧱 PageObject.cs               # Base page object wrapper
+│   ├── 🎨 ReportTemplate.css          # HTML report stylesheet
+│   ├── 🖼️ ReportTemplate.html         # HTML report template
+│   └── ⚙️ usings.cs                   # Global imports & parallelization config
+├── 🔧 Playwright_BaseFramework.csproj # Project file with NuGet dependencies
+├── 🔧 reqnroll.json                   # Reqnroll config with external data settings
+├── 🔧 Playwright.runsettings          # Run settings (browser, headless, etc.)
+└── 📁 bin/Debug/net10.0/
+    ├── 📊 PlaywrightReport.html       # Test execution report
+    ├── 🎬 PlaywrightTraces/           # Browser execution traces
+    └── 📸 PlaywrightScreenshots/      # Screenshots from test runs
 ```
 
-## Technology Stack
+---
 
-- **.NET Target Framework**: .NET 10.0
-- **Testing Framework**: NUnit 4.6.1
-- **Playwright**: Microsoft.Playwright.NUnit 1.61.0
-- **Reqnroll**: Reqnroll.NUnit 3.3.4
-- **External Data**: Reqnroll.ExternalData 3.3.4
-- **Test SDK**: Microsoft.NET.Test.Sdk 18.7.0
+## 🧰 Technology Stack
 
-## Getting Started
+| Component | Package | Version |
+|---|---|---|
+| 🎯 Target Framework | .NET | `10.0` |
+| 🧪 Testing Framework | NUnit | `4.6.1` |
+| 🎭 Browser Automation | Microsoft.Playwright.NUnit | `1.61.0` |
+| 🥒 BDD Engine | Reqnroll.NUnit | `3.3.4` |
+| 📁 External Data | Reqnroll.ExternalData | `3.3.4` |
+| 🛠️ Test SDK | Microsoft.NET.Test.Sdk | `18.7.0` |
 
-### Prerequisites
+---
+
+## 🚀 Getting Started
+
+### ✅ Prerequisites
+
 - .NET 10.0 SDK or later
 - PowerShell 5.1 or later (for Windows)
 
-### Installation
+### 📥 Installation
 
-1. **Clone the repository**
-   ```powershell
-   git clone <repository-url>
-   cd Reqnroll_Playwright_CSharp\Playwright_BaseFramework\Playwright_BaseFramework
-   ```
+**1️⃣ Clone the repository**
 
-2. **Restore NuGet packages**
-   ```powershell
-   dotnet restore
-   ```
+```bash
+git clone <repository-url>
+cd Reqnroll_Playwright_CSharp\Playwright_BaseFramework\Playwright_BaseFramework
+```
 
-3. **Clean and build the project**
-   ```powershell
-   dotnet clean
-   dotnet build
-   ```
+**2️⃣ Restore NuGet packages**
 
-4. **Install Playwright browsers**
-   ```powershell
-   pwsh bin\Debug\net10.0\playwright.ps1 install
-   ```
+```bash
+dotnet restore
+```
 
-5. **Run all tests**
-   ```powershell
-   dotnet test --settings Playwright.runsettings
-   ```
+**3️⃣ Clean and build the project**
 
-5. **View test report**
-   ```powershell
-   # Open the generated HTML report
-   Start-Process .\bin\Debug\net10.0\PlaywrightReport.html
-   ```
+```bash
+dotnet clean
+dotnet build
+```
 
+**4️⃣ Install Playwright browsers**
 
-## Test Artifacts
+```powershell
+pwsh bin\Debug\net10.0\playwright.ps1 install
+```
+
+**5️⃣ Run all tests**
+
+```bash
+dotnet test --settings Playwright.runsettings
+```
+
+**6️⃣ View the test report**
+
+```powershell
+Start-Process .\bin\Debug\net10.0\PlaywrightReport.html
+```
+
+---
+
+## 📊 Test Artifacts
 
 All test artifacts are stored in the output directory:
 
-- **PlaywrightReport.html**: Interactive HTML report with scenario details and step logs
-<img width="1897" height="914" alt="image" src="https://github.com/user-attachments/assets/8a5bfd84-ba1a-4184-93c1-5bc71cc4b250" />
--
-<img width="1892" height="907" alt="image" src="https://github.com/user-attachments/assets/345f0495-edba-4a48-b02c-238b69d34d52" />
+| Artifact | Description |
+|---|---|
+| 📈 **PlaywrightReport.html** | Interactive HTML report with scenario details and step logs |
+| 🎬 **PlaywrightTraces/** | Playwright trace files (`.zip`) for detailed debugging with Playwright Inspector |
+| 📸 **PlaywrightScreenshots/** | Screenshot images captured during test execution |
 
-- **PlaywrightTraces/**: Playwright trace files (.zip) for detailed debugging with Playwright Inspector
-- **PlaywrightScreenshots/**: Screenshot images captured during test execution
+### 📋 Report Structure
 
-### Report Structure
-The generated HTML report includes a summary header with total tests, passed count, failed count, and an overall success rate. Each scenario is listed in a table with feature name, scenario title, status, browser, execution time, and action links for trace files. The report also supports pagination when many scenarios are present, making it easy to review long test runs.
+The generated HTML report includes a **summary header** with total tests, passed count, failed count, and overall success rate. Each scenario is listed in a table with feature name, scenario title, status, browser, execution time, and action links for trace files. The report also supports **pagination** when many scenarios are present — making it easy to review long test runs.
 
-## Parallel Execution
+---
 
-Tests are configured to run in parallel:
+## ⚡ Parallel Execution
+
+Tests are configured to run in parallel out of the box:
 
 ```csharp
 [assembly: Parallelizable(ParallelScope.Fixtures)]
 [assembly: LevelOfParallelism(4)]
 ```
 
-- Runs up to 4 test fixtures in parallel
-- Each scenario gets its own browser context for isolation
+> 🔹 Runs up to **4 test fixtures** in parallel
+> 🔹 Each scenario gets its **own browser context** for isolation
 
-## Troubleshooting
+---
 
-### Browser Installation Issues
+## 🛠️ Troubleshooting
+
+<details>
+<summary><b>🌐 Browser Installation Issues</b></summary>
+<br>
+
 ```powershell
 # Reinstall browsers
 pwsh bin\Debug\net10.0\playwright.ps1 install
 ```
 
-### Test Execution Failures
+</details>
+
+<details>
+<summary><b>❌ Test Execution Failures</b></summary>
+<br>
+
 - Check `PlaywrightReport.html` for errors
 - Review `PlaywrightTraces/` files using Playwright Trace Viewer
 - Verify environment variables in `Playwright.runsettings`
 
-### Debugging Tests
-1. Set **PLAYWRIGHT_Headless=false** to watch the browser execute the tests.
-2. Set **PLAYWRIGHT_SlowMo** to a higher value (e.g., 5000) to slow down test execution, making it easier to observe test behavior and debug issues, especially on slow or unstable network connections.
-3. Check the trace files in the PlaywrightTraces/ directory using the Playwright Trace Viewer for detailed execution logs, screenshots, network activity, and DOM snapshots.
+</details>
 
-## Useful References
+<details>
+<summary><b>🐞 Debugging Tests</b></summary>
+<br>
 
-- [Playwright for .NET Documentation](https://playwright.dev/dotnet/docs/intro)
-- [Reqnroll Documentation](https://docs.reqnroll.net/latest/quickstart/index.html)
-- [Reqnroll External Data Plugin](https://docs.reqnroll.net/latest/plugins/external-data.html)
-- [NUnit Documentation](https://docs.nunit.org/)
-- [Playwright Trace Viewer](https://trace.playwright.dev/)
+- Set `PLAYWRIGHT_Headless=false` to watch the browser execute the tests
+- Set `PLAYWRIGHT_SlowMo` to a higher value (e.g., `5000`) to slow down execution — useful for observing behavior and debugging on slow or unstable networks
+- Check trace files in `PlaywrightTraces/` using the Playwright Trace Viewer for execution logs, screenshots, network activity, and DOM snapshots
 
-## License
+</details>
 
-MIT
+---
+
+## 📚 Useful References
+
+- 🎭 [Playwright for .NET Documentation](https://playwright.dev/dotnet/)
+- 🥒 [Reqnroll Documentation](https://reqnroll.net/)
+- 📁 [Reqnroll External Data Plugin](https://reqnroll.net/)
+- 🧪 [NUnit Documentation](https://docs.nunit.org/)
+- 🔍 [Playwright Trace Viewer](https://playwright.dev/dotnet/docs/trace-viewer)
+
+---
+
+<div align="center">
+
+## 📄 License
+
+Distributed under the **MIT License**.
+
+---
+
+</div>
