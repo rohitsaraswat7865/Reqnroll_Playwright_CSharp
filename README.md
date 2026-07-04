@@ -26,7 +26,7 @@ Playwright_BaseFramework/
 │   └── [generated .feature.cs]     # Auto-generated step binding code
 ├── StepDefinitions/
 │   └── SauceDemoStepDefinitions.cs # Step definitions for SauceDemo tests
-**├── Support/
+├── Support/
 │   ├── Hook.cs                     # Hooks for test setup/teardown, tracing, reporting
 │   ├── PageObject.cs               # Base page object wrapper
 │   ├── ReportTemplate.css          # HTML report stylesheet template
@@ -38,7 +38,7 @@ Playwright_BaseFramework/
 └── bin/Debug/net10.0/
     ├── PlaywrightReport.html       # Test execution report
     ├── PlaywrightTraces/           # Browser execution traces
-    └── PlaywrightScreenshots/      # Screenshots from test runs**
+    └── PlaywrightScreenshots/      # Screenshots from test runs
 ```
 
 ## Technology Stack
