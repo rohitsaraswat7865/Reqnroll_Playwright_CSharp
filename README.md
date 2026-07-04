@@ -1,6 +1,6 @@
 <div align="center">
 
-# 🎭 ReqNRoll BDD Playwright C#
+# ReqNRoll BDD Playwright C#
 
 ### Base Framework Template
 
@@ -37,9 +37,6 @@ Encapsulated page interactions and locators for maintainability
 
 **⚡ Parallel Execution**
 Tests run in parallel via NUnit for faster feedback
-
-</td>
-<td width="50%">
 
 **📊 Comprehensive Reporting**
 HTML report templates with browser trace & screenshot capture
