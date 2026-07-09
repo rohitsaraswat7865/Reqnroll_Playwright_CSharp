@@ -110,7 +110,7 @@ namespace Playwright_BaseFramework.Support
             });
             await loginBrowserContext.StorageStateAsync(new()
             {
-                Path = "auth.json"
+                Path = "auth.json" //localstorage & cookies
             });
         }
 
