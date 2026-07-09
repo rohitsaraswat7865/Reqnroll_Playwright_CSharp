@@ -97,7 +97,7 @@ Playwright_BaseFramework/
 
 ---
 
-## 🚀 Getting Started
+## 🚀 Follow these steps:
 
 ### ✅ Prerequisites
 
@@ -143,6 +143,7 @@ dotnet test --settings Playwright.runsettings
 ```powershell
 Start-Process .\bin\Debug\net10.0\PlaywrightReport.html
 ```
+<img width="987" height="1026" alt="image" src="https://github.com/user-attachments/assets/d1c6d74f-8e18-45a0-81c5-38ee4e785d3a" />
 
 ---
 
