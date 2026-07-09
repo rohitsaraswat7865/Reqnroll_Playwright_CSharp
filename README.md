@@ -10,7 +10,6 @@
 [![Playwright](https://img.shields.io/badge/Playwright-1.61.0-2EAD33?style=for-the-badge&logo=playwright&logoColor=white)](https://playwright.dev/dotnet/)
 [![Reqnroll](https://img.shields.io/badge/Reqnroll-3.3.4-FF6C37?style=for-the-badge)](https://reqnroll.net/)
 [![NUnit](https://img.shields.io/badge/NUnit-4.6.1-1094AB?style=for-the-badge)](https://nunit.org/)
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg?style=for-the-badge)](LICENSE)
 
 </div>
 
