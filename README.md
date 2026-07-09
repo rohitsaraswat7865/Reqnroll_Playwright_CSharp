@@ -227,9 +227,7 @@ pwsh bin\Debug\net10.0\playwright.ps1 install
 
 <div align="center">
 
-## 📄 License
 
-Distributed under the **MIT License**.
 
 ---
 
