@@ -225,10 +225,3 @@ pwsh bin\Debug\net10.0\playwright.ps1 install
 
 ---
 
-<div align="center">
-
-
-
----
-
-</div>
