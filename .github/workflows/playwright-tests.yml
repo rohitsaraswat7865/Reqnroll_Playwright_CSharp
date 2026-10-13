@@ -1,0 +1,56 @@
+name: Continuous Tests
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+    inputs:
+      browser:
+        description: Browser to run the tests in
+        type: choice
+        options: [Chrome, Edge, Firefox, Safari]
+        default: Chrome
+
+jobs:
+  playwright-tests:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    permissions:
+      contents: read
+    env:
+      BROWSER: ${{ inputs.browser || 'Chrome' }}
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Resolve Playwright engine
+        id: engine
+        run: |
+          case "$BROWSER" in
+            Firefox) echo "name=firefox"  >> "$GITHUB_OUTPUT" ;;
+            Safari)  echo "name=webkit"   >> "$GITHUB_OUTPUT" ;;
+            *)       echo "name=chromium" >> "$GITHUB_OUTPUT" ;;
+          esac
+
+      - name: Build Docker image
+        run: |
+          docker build \
+            --build-arg PLAYWRIGHT_BROWSERS=${{ steps.engine.outputs.name }} \
+            -t reqnroll-playwright-tests .
+
+      - name: Run Reqnroll Playwright tests in Docker
+        run: |
+          mkdir -p results
+          docker run --rm --init --ipc=host \
+            -e PLAYWRIGHT_BrowserType="$BROWSER" \
+            -v "${{ github.workspace }}/results:/results" \
+            reqnroll-playwright-tests
+
+      - name: Upload test artifacts
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-artifacts-${{ env.BROWSER }}
+          path: results/
+          if-no-files-found: ignore
